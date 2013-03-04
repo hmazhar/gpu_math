@@ -10,40 +10,27 @@
 #define R4  real4
 #define R2  real2
 #define I4  int4
-#define I3  make_int3
-#define I2  make_int2
+#define I3  _make_int3
+#define I2  _make_int2
 #define U3  make_uint3
 #define ZERO_EPSILON 1e-10
-
-
 typedef unsigned int uint;
 
-//struct uint3 {
-//
-//    uint3(unsigned int a = 0, unsigned int b = 0, unsigned int c = 0): x(a), y(b), z(c) {}
-//    unsigned int x, y, c;
-//};
-//
-//
-//struct int2 {
-//
-//    int2(int a = 0, int b = 0): x(a), y(b){}
-//    int x, y;
-//};
-//
-//struct int3 {
-//
-//    int3(int a = 0, int b = 0, int c = 0): x(a), y(b), z(c){}
-//
-//    int x, y, z;
-//};
-//
-//struct int4 {
-//
-//    int4(int a = 0, int b = 0, int c = 0, int d = 0): x(a), y(b), z(c), w(d) {}
-//
-//    int x, y, z, w;
-//};
+static __host__ __device__ int3 _make_int3(int a, int b, int c) {
+    int3 t;
+    t.x = a;
+    t.y = b;
+    t.z = c;
+    return t;
+}
+
+
+static __host__ __device__ int2 _make_int2(int a, int b) {
+    int2 t;
+    t.x = a;
+    t.y = b;
+    return t;
+}
 
 ////////Define Real, either float or double
 typedef double real;
@@ -52,6 +39,7 @@ struct real2 {
     __host__ __device__ real2() {}
     __host__ __device__ real2(real a): x(a), y(a) {}
     __host__ __device__ real2(real a, real b): x(a), y(b) {}
+
     real x, y;
 };
 
@@ -70,6 +58,20 @@ struct real4 {
 
     real w, x, y, z;
 };
+
+static ostream &operator<< (ostream &out, real2 &a) {
+    out << "[" << a.x << ", " << a.y << "]" << endl;
+    return out;
+}
+
+static ostream &operator<< (ostream &out, real3 &a) {
+    out << "[" << a.x << ", " << a.y << ", " << a.z << "]" << endl;
+    return out;
+}
+static ostream &operator<< (ostream &out, real4 &a) {
+    out << "[" << a.w << ", " << a.x << ", " << a.y << ", " << a.z << "]" << endl;
+    return out;
+}
 
 ////////defines
 
@@ -337,7 +339,13 @@ static __host__ __device__ uint nearest_pow(uint num) {
     return n;
 }
 
-
+static __host__ __device__ real sign(real x) {
+    if (x < 0) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
 
 ////////Generic Operations
 template<class T>
@@ -358,6 +366,26 @@ __host__ __device__ inline real max3(T a) {
 template<class T>
 __host__ __device__ inline real min3(T a) {
     return min(a.x, min(a.y, a.z));
+}
+
+
+
+////////Output Operations
+template<class T>
+static ostream &operator<< (ostream &out, const thrust::device_vector<T> &x) {
+    for (uint i = 0; i < x.size(); i++) {
+        out << x[i];
+    }
+
+    return out;
+}
+template<class T>
+static ostream &operator<< (ostream &out, const thrust::host_vector<T> &x) {
+    for (uint i = 0; i < x.size(); i++) {
+        out << x[i];
+    }
+
+    return out;
 }
 
 

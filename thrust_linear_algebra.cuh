@@ -3,6 +3,15 @@
 
 #include "gpu_math.h"
 
+#define SIM_ENABLE_GPU_MODE
+#ifdef SIM_ENABLE_GPU_MODE
+#define THRUST_DEVICE_SYSTEM THRUST_DEVICE_SYSTEM_CUDA
+#define custom_vector thrust::device_vector
+#else
+#define THRUST_DEVICE_SYSTEM THRUST_DEVICE_SYSTEM_OMP
+#define custom_vector thrust::host_vector
+#endif
+
 struct saxpy_functor : public thrust::binary_function<real, real, real> {
         const real a;
 
