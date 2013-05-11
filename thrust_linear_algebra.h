@@ -86,11 +86,7 @@ static real Dot(const custom_vector<real> &x, const custom_vector<real> &y)
         real answer = thrust::inner_product(x.begin(), x.end(), y.begin(), real(0.0), binary_op1, binary_op2);
         return answer;
 }
-static real Norm(const custom_vector<real> &x)
-{
-        return sqrt(Dot(x, x));
 
-}
 struct abs_functor : public thrust::unary_function<real, real> {
 
         __host__ __device__
@@ -106,4 +102,29 @@ static custom_vector<real> Abs(const custom_vector<real> &x)
 	        return temp;
 
 }
+
+template<typename T>
+struct square
+{
+	__host__ __device__
+	T operator()(const T& x) const {
+		return x * x;
+	}
+};
+
+static real Norm(const custom_vector<real> &x)
+{
+	square<real> unary_op;
+	thrust::plus<real> binary_op;
+	real init = 0;
+	return sqrt( thrust::transform_reduce(x.begin(), x.end(), unary_op, init, binary_op) );
+	//return sqrt(Dot(x, x));
+    
+}
+static real NormInf(const custom_vector<real> &x)
+{
+	custom_vector<real> res = Abs(x);
+	return res[thrust::max_element(res.begin(),res.end())-res.begin()];
+}
+
 #endif
