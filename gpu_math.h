@@ -1,6 +1,6 @@
 #ifndef GPU_MATH_H
 #define GPU_MATH_H
-
+#include "gpu_common.h"
 #pragma once
 //====================================INCLUDES=================================//
 
