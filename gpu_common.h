@@ -59,3 +59,5 @@ typedef unsigned int uint;
 #else
 #define custom_vector thrust::host_vector
 #endif
+
+#endif
