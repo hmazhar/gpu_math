@@ -5,70 +5,70 @@
 
 // Trig Functions
 // ========================================================================================
-inline CUDA_HOST_DEVICE real Sin(real theta) {
+static inline CUDA_HOST_DEVICE real Sin(real theta) {
     return sinf(theta);
 }
-inline CUDA_HOST_DEVICE real Cos(real theta) {
+static inline CUDA_HOST_DEVICE real Cos(real theta) {
     return cosf(theta);
 }
-inline CUDA_HOST_DEVICE real Tan(real theta) {
+static inline CUDA_HOST_DEVICE real Tan(real theta) {
     return tanf(theta);
 }
-inline CUDA_HOST_DEVICE real ASin(real theta) {
+static inline CUDA_HOST_DEVICE real ASin(real theta) {
     return asinf(theta);
 }
-inline CUDA_HOST_DEVICE real ACos(real theta) {
+static inline CUDA_HOST_DEVICE real ACos(real theta) {
     return acosf(theta);
 }
-inline CUDA_HOST_DEVICE real ATan(real theta) {
+static inline CUDA_HOST_DEVICE real ATan(real theta) {
     return atanf(theta);
 }
-inline CUDA_HOST_DEVICE real ATan2(real x, real y) {
+static inline CUDA_HOST_DEVICE real ATan2(real x, real y) {
     return atan2f(x, y);
 }
-inline CUDA_HOST_DEVICE real DegToRad(real t) {
+static inline CUDA_HOST_DEVICE real DegToRad(real t) {
     return t * C_DegToRad;
 }
-inline CUDA_HOST_DEVICE real RadToDeg(real t) {
+static inline CUDA_HOST_DEVICE real RadToDeg(real t) {
     return t * C_RadToDeg;
 }
 
 // Geometric Functions
 // ========================================================================================
-inline CUDA_HOST_DEVICE real Sqr(real x) {
+static inline CUDA_HOST_DEVICE real Sqr(real x) {
     return x * x;
 }
-inline CUDA_HOST_DEVICE real Cube(real x) {
+static inline CUDA_HOST_DEVICE real Cube(real x) {
     return x * x * x;
 }
-inline CUDA_HOST_DEVICE real Sqrt(real x) {
+static inline CUDA_HOST_DEVICE real Sqrt(real x) {
     return sqrtf(x);
 }
-inline CUDA_HOST_DEVICE real InvSqrt(real x) {
+static inline CUDA_HOST_DEVICE real InvSqrt(real x) {
     return 1.0f / sqrtf(x);  // could also use rsqrtf(x) here and avoid division
 }
-inline CUDA_HOST_DEVICE real Abs(real x) {
+static inline CUDA_HOST_DEVICE real Abs(real x) {
     return fabsf(x);
 }
-inline CUDA_HOST_DEVICE real Pow(real b, real e) {
+static inline CUDA_HOST_DEVICE real Pow(real b, real e) {
     return powf(b, e);
 }
-inline CUDA_HOST_DEVICE real Mod(real x, real y) {
+static inline CUDA_HOST_DEVICE real Mod(real x, real y) {
     return fmod(x, y);
 }
-inline CUDA_HOST_DEVICE real Exp(real x) {
+static inline CUDA_HOST_DEVICE real Exp(real x) {
     return expf(x);
 }
-inline CUDA_HOST_DEVICE real Sign(real x) {
+static inline CUDA_HOST_DEVICE real Sign(real x) {
     return x < 0.0f ? -1.0f : 1.0f;
 }
-inline CUDA_HOST_DEVICE bool IsZero(real x) {
+static inline CUDA_HOST_DEVICE bool IsZero(real x) {
     return Abs(x) < C_EPSILON;
 }
-inline CUDA_HOST_DEVICE real Min(real a, real b) {
+static inline CUDA_HOST_DEVICE real Min(real a, real b) {
     return fminf(a, b);
 }
-inline CUDA_HOST_DEVICE real Max(real a, real b) {
+static inline CUDA_HOST_DEVICE real Max(real a, real b) {
     return fmaxf(a, b);
 }
 
@@ -147,7 +147,7 @@ inline CUDA_HOST_DEVICE T ClampMax(T x, U high) {
 
 // code adopted from http://stackoverflow.com/questions/17371275/implementing-max-reduce-in-cuda
 // ========================================================================================
-inline CUDA_DEVICE float AtomicMaxf(float* address, float value) {
+static inline CUDA_DEVICE float AtomicMaxf(float* address, float value) {
     int* address_as_int = (int*)address;
     int old = *address_as_int, assumed;
 
@@ -159,7 +159,7 @@ inline CUDA_DEVICE float AtomicMaxf(float* address, float value) {
     return __int_as_float(old);
 }
 
-inline CUDA_DEVICE float AtomicMinf(float* address, float value) {
+static inline CUDA_DEVICE float AtomicMinf(float* address, float value) {
     int* address_as_int = (int*)address;
     int old = *address_as_int, assumed;
 

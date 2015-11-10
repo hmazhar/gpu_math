@@ -115,21 +115,21 @@ static CUDA_HOST_DEVICE bool operator==(const real4& lhs, const real4& rhs) {
     return (lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w);
 }
 
-inline CUDA_DEVICE void AtomicAdd(real4* pointer, real4 val) {
+static inline CUDA_DEVICE void AtomicAdd(real4* pointer, real4 val) {
     atomicAdd(&pointer->x, val.x);
     atomicAdd(&pointer->y, val.y);
     atomicAdd(&pointer->z, val.z);
     atomicAdd(&pointer->w, val.w);
 }
 
-inline CUDA_DEVICE void AtomicMax(real4* pointer, real4 val) {
+static inline CUDA_DEVICE void AtomicMax(real4* pointer, real4 val) {
     AtomicMaxf(&pointer->x, val.x);
     AtomicMaxf(&pointer->y, val.y);
     AtomicMaxf(&pointer->z, val.z);
     AtomicMaxf(&pointer->w, val.w);
 }
 
-inline CUDA_DEVICE void AtomicMin(real4* pointer, real4 val) {
+static inline CUDA_DEVICE void AtomicMin(real4* pointer, real4 val) {
     AtomicMinf(&pointer->x, val.x);
     AtomicMinf(&pointer->y, val.y);
     AtomicMinf(&pointer->z, val.z);
@@ -193,19 +193,19 @@ class quaternion {
     real x, y, z, w;
 };
 
-inline CUDA_HOST_DEVICE quaternion operator~(quaternion const& a) {
+static inline CUDA_HOST_DEVICE quaternion operator~(quaternion const& a) {
     return quaternion(a.w, -a.x, -a.y, -a.z);
 }
 
-static CUDA_HOST_DEVICE inline real Dot(const quaternion& v1, const quaternion& v2) {
+static inline CUDA_HOST_DEVICE  real Dot(const quaternion& v1, const quaternion& v2) {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
 }
 
-static CUDA_HOST_DEVICE inline real Dot(const quaternion& v) {
+static inline CUDA_HOST_DEVICE  real Dot(const quaternion& v) {
     return v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w;
 }
 
-inline CUDA_HOST_DEVICE quaternion Mult(const quaternion& a, const quaternion& b) {
+static inline CUDA_HOST_DEVICE quaternion Mult(const quaternion& a, const quaternion& b) {
     quaternion temp;
     temp.w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
     temp.x = a.w * b.x + a.x * b.w - a.z * b.y + a.y * b.z;
@@ -214,12 +214,12 @@ inline CUDA_HOST_DEVICE quaternion Mult(const quaternion& a, const quaternion& b
     return temp;
 }
 
-inline CUDA_HOST_DEVICE real3 Rotate(const real3& v, const quaternion& q) {
+static inline CUDA_HOST_DEVICE real3 Rotate(const real3& v, const quaternion& q) {
     real3 t = 2 * Cross(real3(q.x, q.y, q.z), v);
     return v + q.w * t + Cross(real3(q.x, q.y, q.z), t);
 }
 
-inline CUDA_HOST_DEVICE real3 RotateT(const real3& v, const quaternion& q) {
+static inline CUDA_HOST_DEVICE real3 RotateT(const real3& v, const quaternion& q) {
     return Rotate(v, ~q);
 }
 

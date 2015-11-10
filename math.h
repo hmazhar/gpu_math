@@ -1,3 +1,4 @@
+#pragma once 
 #include "defines.h"
 #include "real.h"
 #include "real2.h"
@@ -9,11 +10,11 @@
 //Math Functions that use multiple types
 // ========================================================================================
 
-inline CUDA_HOST_DEVICE real3 TransformLocalToParent(const real3& p, const quaternion& q, const real3& rl) {
+static inline CUDA_HOST_DEVICE real3 TransformLocalToParent(const real3& p, const quaternion& q, const real3& rl) {
     return p + Rotate(rl, q);
 }
 
-inline CUDA_HOST_DEVICE real3 TransformParentToLocal(const real3& p, const quaternion& q, const real3& rp) {
+static inline CUDA_HOST_DEVICE real3 TransformParentToLocal(const real3& p, const quaternion& q, const real3& rp) {
   return RotateT(rp - p, q);
 }
 

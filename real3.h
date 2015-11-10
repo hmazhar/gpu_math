@@ -149,7 +149,7 @@ static CUDA_HOST_DEVICE inline real3 Min(const real3& a, const real& b) {
     return real3(Min(a.x, b), Min(a.y, b), Min(a.z, b));
 }
 
-inline CUDA_HOST_DEVICE bool IsZero(const real3& v) {
+static inline CUDA_HOST_DEVICE bool IsZero(const real3& v) {
     return Abs(v.x) < C_EPSILON && Abs(v.y) < C_EPSILON && Abs(v.z) < C_EPSILON;
 }
 
@@ -162,25 +162,25 @@ struct real3Max {
     inline CUDA_DEVICE real3 operator()(const real3& a, const real3& b) { return Max(a, b); }
 };
 
-inline CUDA_DEVICE void AtomicAdd(real3* pointer, real3 val) {
+static inline CUDA_DEVICE void AtomicAdd(real3* pointer, real3 val) {
     atomicAdd(&pointer->x, val.x);
     atomicAdd(&pointer->y, val.y);
     atomicAdd(&pointer->z, val.z);
 }
 
-inline CUDA_DEVICE void AtomicMax(real3* pointer, real3 val) {
+static inline CUDA_DEVICE void AtomicMax(real3* pointer, real3 val) {
     AtomicMaxf(&pointer->x, val.x);
     AtomicMaxf(&pointer->y, val.y);
     AtomicMaxf(&pointer->z, val.z);
 }
 
-inline CUDA_DEVICE void AtomicMin(real3* pointer, real3 val) {
+static inline CUDA_DEVICE void AtomicMin(real3* pointer, real3 val) {
     AtomicMinf(&pointer->x, val.x);
     AtomicMinf(&pointer->y, val.y);
     AtomicMinf(&pointer->z, val.z);
 }
 
-CUDA_DEVICE inline real3 ClampLength(const real3& v, float max_length) {
+static inline CUDA_DEVICE real3 Clamp(const real3& v, float max_length) {
     real3 x = v;
     float len_sq = Dot(x, x);
     float inv_len = rsqrtf(len_sq);
@@ -191,7 +191,7 @@ CUDA_DEVICE inline real3 ClampLength(const real3& v, float max_length) {
     return x;
 }
 
-inline CUDA_HOST_DEVICE real3 OrthogonalVector(const real3& v) {
+static inline CUDA_HOST_DEVICE real3 OrthogonalVector(const real3& v) {
     real abs_x = Abs(v.x);
     real abs_y = Abs(v.y);
     real abs_z = Abs(v.z);
@@ -202,11 +202,11 @@ inline CUDA_HOST_DEVICE real3 OrthogonalVector(const real3& v) {
     }
 }
 
-inline CUDA_HOST_DEVICE real3 UnitOrthogonalVector(const real3& v) {
+static inline CUDA_HOST_DEVICE real3 UnitOrthogonalVector(const real3& v) {
     return Normalize(OrthogonalVector(v));
 }
 
-inline CUDA_HOST_DEVICE void Sort(real& a, real& b, real& c) {
+static inline CUDA_HOST_DEVICE void Sort(real& a, real& b, real& c) {
     if (a > b)
         Swap(a, b);
     if (b > c)

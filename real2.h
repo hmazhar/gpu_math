@@ -107,17 +107,17 @@ static CUDA_HOST_DEVICE inline real Length2(const real2& v1) {
     return v1.x * v1.x + v1.y * v1.y;
 }
 
-inline CUDA_DEVICE void AtomicAdd(real2* pointer, real2 val) {
+static inline CUDA_DEVICE void AtomicAdd(real2* pointer, real2 val) {
     atomicAdd(&pointer->x, val.x);
     atomicAdd(&pointer->y, val.y);
 }
 
-inline CUDA_DEVICE void AtomicMax(real2* pointer, real2 val) {
+static inline CUDA_DEVICE void AtomicMax(real2* pointer, real2 val) {
     AtomicMaxf(&pointer->x, val.x);
     AtomicMaxf(&pointer->y, val.y);
 }
 
-inline CUDA_DEVICE void AtomicMin(real2* pointer, real2 val) {
+static inline CUDA_DEVICE void AtomicMin(real2* pointer, real2 val) {
     AtomicMinf(&pointer->x, val.x);
     AtomicMinf(&pointer->y, val.y);
 }
