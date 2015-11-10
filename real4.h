@@ -219,15 +219,7 @@ inline CUDA_HOST_DEVICE real3 Rotate(const real3& v, const quaternion& q) {
     return v + q.w * t + Cross(real3(q.x, q.y, q.z), t);
 }
 
-inline CUDA_HOST_DEVICE real3 quatRotate(const real3& v, const quaternion& q) {
-    return Rotate(v, q);
-}
-
-inline CUDA_HOST_DEVICE real3 quatRotateT(const real3& v, const quaternion& q) {
+inline CUDA_HOST_DEVICE real3 RotateT(const real3& v, const quaternion& q) {
     return Rotate(v, ~q);
-}
-
-inline CUDA_HOST_DEVICE real3 TransformLocalToParent(const real3& p, const quaternion& q, const real3& rl) {
-    return p + Rotate(rl, q);
 }
 

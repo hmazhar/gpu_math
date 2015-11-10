@@ -1,4 +1,5 @@
 #pragma once
+#include <stdio.h>
 #include "defines.h"
 #include "real3.h"
 #include "real4.h"
@@ -325,7 +326,7 @@ static CUDA_HOST_DEVICE Mat33 Adjoint(const Mat33& A) {
     return T;
 }
 
-static CUDA_HOST_DEVICE real3 Largest_Column_Normalized(const Mat33& A) {
+static CUDA_HOST_DEVICE real3 LargestColumnNormalized(const Mat33& A) {
     real scale1 = Length2((A.cols[0]));
     real scale2 = Length2((A.cols[1]));
     real scale3 = Length2((A.cols[2]));
@@ -341,7 +342,7 @@ static CUDA_HOST_DEVICE real3 Largest_Column_Normalized(const Mat33& A) {
 
 // ========================================================================================
 
-static CUDA_HOST_DEVICE SymMat33 Cofactor_Matrix(const SymMat33& A) {
+static CUDA_HOST_DEVICE SymMat33 CofactorMatrix(const SymMat33& A) {
     SymMat33 T;
     T.x11 = A.x22 * A.x33 - A.x32 * A.x32;   //
     T.x21 = -A.x21 * A.x33 + A.x32 * A.x31;  //
@@ -352,7 +353,7 @@ static CUDA_HOST_DEVICE SymMat33 Cofactor_Matrix(const SymMat33& A) {
     return T;
 }
 
-static CUDA_HOST_DEVICE SymMat22 Cofactor_Matrix(const SymMat22& A) {
+static CUDA_HOST_DEVICE SymMat22 CofactorMatrix(const SymMat22& A) {
     SymMat22 T;
     T.x11 = A.x22;   //
     T.x21 = -A.x21;  //
@@ -360,7 +361,7 @@ static CUDA_HOST_DEVICE SymMat22 Cofactor_Matrix(const SymMat22& A) {
     return T;
 }
 
-static CUDA_HOST_DEVICE real3 Largest_Column_Normalized(const SymMat33& A) {
+static CUDA_HOST_DEVICE real3 LargestColumnNormalized(const SymMat33& A) {
     real scale1 = Length2(real3(A.x11, A.x21, A.x31));
     real scale2 = Length2(real3(A.x21, A.x22, A.x32));
     real scale3 = Length2(real3(A.x31, A.x32, A.x33));
@@ -374,7 +375,7 @@ static CUDA_HOST_DEVICE real3 Largest_Column_Normalized(const SymMat33& A) {
     return real3(A.x31, A.x32, A.x33) / sqrt(scale3);
 }
 
-static CUDA_HOST_DEVICE real2 Largest_Column_Normalized(const SymMat22& A) {
+static CUDA_HOST_DEVICE real2 LargestColumnNormalized(const SymMat22& A) {
     real scale1 = Length2(real2(A.x11, A.x21));
     real scale2 = Length2(real2(A.x21, A.x22));
     if (scale1 > scale2) {
@@ -386,104 +387,7 @@ static CUDA_HOST_DEVICE real2 Largest_Column_Normalized(const SymMat22& A) {
     }
 }
 
-//
-// static inline CUDA_HOST_DEVICE SymMat33 operator-(const SymMat33& M, const real& b) {
-//    return SymMat33(M.x11 - b, M.x21 - b, M.x31 - b, M.x22 - b, M.x32 - b, M.x33 - b);
-//}
-//
-// 12 mults, 6 adds
-// static inline CUDA_HOST_DEVICE SymMat33 Cofactor_Matrix(const SymMat33& M) {
-//    return SymMat33(M.x22 * M.x33 - M.x32 * M.x32,  //
-//                    M.x32 * M.x31 - M.x21 * M.x33,  //
-//                    M.x21 * M.x32 - M.x22 * M.x31,  //
-//                    M.x11 * M.x33 - M.x31 * M.x31,  //
-//                    M.x21 * M.x31 - M.x11 * M.x32,  //
-//                    M.x11 * M.x22 - M.x21 * M.x21   //
-//                    );
-//}
-//
-//// 9 mults, 6 adds, 1 div, 1 sqrt
-// static inline CUDA_HOST_DEVICE real3 Largest_Column_Normalized(const SymMat33& M) {
-//    real sqr11 = Sqr(M.x11);
-//    real sqr12 = Sqr(M.x21);
-//    real sqr13 = Sqr(M.x31);
-//    real sqr22 = Sqr(M.x22);
-//    real sqr23 = Sqr(M.x32);
-//    real sqr33 = Sqr(M.x33);
-//
-//    real scale1 = sqr11 + sqr12 + sqr13;
-//    real scale2 = sqr12 + sqr22 + sqr23;
-//    real scale3 = sqr13 + sqr23 + sqr33;
-//
-//    if (scale1 > scale2) {
-//        if (scale1 > scale3) {
-//            return real3(M.x11, M.x21, M.x31) / Sqrt(scale1);
-//        }
-//    } else if (scale2 > scale3) {
-//        return real3(M.x21, M.x22, M.x32) / Sqrt(scale2);
-//    }
-//    if (scale3 > 0) {
-//        return real3(M.x31, M.x32, M.x33) / Sqrt(scale3);
-//    } else {
-//        return real3(1, 0, 0);
-//    }
-//}
-//// ========================================================================================
-//
-// static inline CUDA_HOST_DEVICE SymMat22 operator-(const SymMat22& M, const real& b) {
-//    return SymMat22(M.x11 - b, M.x21 - b, M.x22 - b);
-//}
-// static inline CUDA_HOST_DEVICE SymMat22 Cofactor_Matrix(const SymMat22& M) {
-//    return SymMat22(M.x22, -M.x21, M.x11);
-//}
-//// 5 mults, 2 adds, 1 div, 1 sqrt
-// static inline CUDA_HOST_DEVICE real2 Largest_Column_Normalized(const SymMat22& M) {
-//    real sqr11 = Sqr(M.x11);
-//    real sqr12 = Sqr(M.x21);
-//    real sqr22 = Sqr(M.x22);
-//    real scale1 = sqr11 + sqr12;
-//    real scale2 = sqr12 + sqr22;
-//    if (scale1 > scale2) {
-//        return real2(M.x11, M.x21) / Sqrt(scale1);
-//    } else if (scale2 > 0) {
-//        return real2(M.x21, M.x22) / Sqrt(scale2);
-//    } else {
-//        return real2(1, 0);
-//    }
-//}
-//// ========================================================================================
-//
-// static inline CUDA_HOST_DEVICE DiagMat33 Sqrt(const DiagMat33& M) {
-//    return DiagMat33(Sqrt(M.x11), Sqrt(M.x22), Sqrt(M.x33));
-//}
-//
-// static inline CUDA_HOST_DEVICE DiagMat33 ClampMin(const DiagMat33& M, const real a) {
-//    return DiagMat33(ClampMin(M.x11, a), ClampMin(M.x22, a), ClampMin(M.x33, a));
-//}
-//
-// static inline CUDA_HOST_DEVICE DiagMat33 ClampMax(DiagMat33 M, const real a) {
-//    return DiagMat33(ClampMax(M.x11, a), ClampMax(M.x22, a), ClampMax(M.x33, a));
-//}
-//
-//// ========================================================================================
-//
-// static inline CUDA_HOST_DEVICE Mat23 Transpose(const Mat32& a) {
-//    Mat23 result;
-//    result.rows[0] = a.cols[0];
-//    result.rows[1] = a.cols[1];
-//
-//    return result;
-//}
-//// 2x3 * 3x1 = 2x1
-// static inline CUDA_HOST_DEVICE real2 operator*(const Mat23& M, const real3& v) {
-//    real2 result;
-//
-//    result.x = Dot(M.rows[0], v);
-//    result.y = Dot(M.rows[1], v);
-//    return result;
-//}
 
-//
 static inline CUDA_HOST_DEVICE Mat32 operator*(const SymMat33& M, const Mat32& N) {
     Mat32 result;
 
@@ -501,7 +405,7 @@ static inline CUDA_HOST_DEVICE Mat32 operator*(const SymMat33& M, const Mat32& N
     return result;
 }
 // A^T*B
-static inline CUDA_HOST_DEVICE SymMat22 Transpose_Times_With_Symmetric_Result(const Mat32& A, const Mat32& B) {
+static inline CUDA_HOST_DEVICE SymMat22 TransposeTimesWithSymmetricResult(const Mat32& A, const Mat32& B) {
     SymMat22 T;
     T.x11 = Dot(A.cols[0], B.cols[0]);
     T.x21 = Dot(A.cols[1], B.cols[0]);
@@ -509,24 +413,11 @@ static inline CUDA_HOST_DEVICE SymMat22 Transpose_Times_With_Symmetric_Result(co
     return T;
 }
 
-static inline CUDA_HOST_DEVICE SymMat22 Conjugate_With_Transpose(const Mat32& A, const SymMat33& B) {
-    return Transpose_Times_With_Symmetric_Result(B * A, A);
+static inline CUDA_HOST_DEVICE SymMat22 ConjugateWithTranspose(const Mat32& A, const SymMat33& B) {
+    return TransposeTimesWithSymmetricResult(B * A, A);
 }
-//// ========================================================================================
-//
-//// A^t*B
-//// and assume symmetric result, 9 mults, 6 adds
-// static CUDA_HOST_DEVICE SymMat22 Transpose_Times_With_Symmetric_Result(const Mat32& A, const Mat32& B) {
-//    return SymMat22(Dot(A.cols[0], B.cols[0]), Dot(A.cols[1], B.cols[0]), Dot(A.cols[1], B.cols[1]));
-//}
-//
-// static CUDA_HOST_DEVICE SymMat22 Conjugate_With_Transpose(const Mat32& A, const SymMat33& B)  // 21 mults, 12 adds
-//{
-//    return Transpose_Times_With_Symmetric_Result(B * A, A);
-//}
-//// ========================================================================================
 
-#include <stdio.h>
+
 static CUDA_HOST_DEVICE void PrintMat(Mat33 A, const char* name) {
     printf("%s\n", name);
     printf("%f %f %f\n", A.cols[0].x, A.cols[1].x, A.cols[2].x);
