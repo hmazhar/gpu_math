@@ -199,6 +199,12 @@ static inline CUDA_HOST_DEVICE Mat33 SkewSymmetric(const real3& r) {
 static inline CUDA_HOST_DEVICE real Determinant(const Mat33& m) {
     return Dot(m.cols[0], Cross(m.cols[1], m.cols[2]));
 }
+
+static inline CUDA_HOST_DEVICE Mat33 Abs(const Mat33& m) {
+    return Mat33(Abs(m.cols[0].x), Abs(m.cols[0].y), Abs(m.cols[0].z), Abs(m.cols[1].x), Abs(m.cols[1].y),
+                 Abs(m.cols[1].z), Abs(m.cols[2].x), Abs(m.cols[2].y), Abs(m.cols[2].z));
+}
+
 static inline CUDA_HOST_DEVICE Mat33 Transpose(const Mat33& a) {
     Mat33 result;
     for (unsigned int i = 0; i < 3; ++i)
