@@ -71,7 +71,19 @@ static inline CUDA_HOST_DEVICE real Min(real a, real b) {
 static inline CUDA_HOST_DEVICE real Max(real a, real b) {
     return fmaxf(a, b);
 }
-
+static inline CUDA_HOST_DEVICE real Floor(real a) {
+    return floorf(a);
+}
+static inline CUDA_HOST_DEVICE real Ceil(real a) {
+    return ceilf(a);
+}
+static inline CUDA_HOST_DEVICE real Round(real a) {
+    return roundf(a);
+}
+//a * b + c
+static inline CUDA_HOST_DEVICE real Fmaf(real a, real b, real c) {
+    return fmaf(a, b, c);
+}
 // Templated Functions, Will work on real vector types
 // ========================================================================================
 
