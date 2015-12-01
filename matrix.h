@@ -378,7 +378,11 @@ static CUDA_HOST_DEVICE real3 LargestColumnNormalized(const SymMat33& A) {
     } else if (scale2 > scale3) {
         return real3(A.x21, A.x22, A.x32) / sqrt(scale2);
     }
-    return real3(A.x31, A.x32, A.x33) / sqrt(scale3);
+    if (scale3 > 0)
+        return real3(A.x31, A.x32, A.x33) / sqrt(scale3);
+    else {
+        return (real3(1, 0, 0));
+    }
 }
 
 static CUDA_HOST_DEVICE real2 LargestColumnNormalized(const SymMat22& A) {
