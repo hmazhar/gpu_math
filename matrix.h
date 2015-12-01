@@ -5,12 +5,19 @@
 #include "real4.h"
 
 struct Mat33 {
-    CUDA_HOST_DEVICE Mat33() {}
-    CUDA_HOST_DEVICE Mat33(real v) {
-        cols[0].x = v;
-        cols[1].y = v;
-        cols[2].z = v;
+	//Zero constructor
+    CUDA_HOST_DEVICE Mat33() {
+        cols[0] = real3(0.0f);
+        cols[1] = real3(0.0f);
+        cols[2] = real3(0.0f);
     }
+    //diagonal matrix constructor
+    CUDA_HOST_DEVICE Mat33(real v) {
+        cols[0] = real3(v, 0, 0);
+        cols[1] = real3(0, v, 0);
+        cols[2] = real3(0, 0, v);
+    }
+
     // Constructor that takes three columns of the matrix
     CUDA_HOST_DEVICE Mat33(const real3& col1, const real3& col2, const real3& col3) {
         cols[0] = col1;
