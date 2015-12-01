@@ -1,6 +1,6 @@
 #pragma once
 #include "real.h"
-
+#include <stdio.h>
 class real3 {
   public:
     CUDA_HOST_DEVICE inline real3() : x(0), y(0), z(0) {}
@@ -213,4 +213,8 @@ static inline CUDA_HOST_DEVICE void Sort(real& a, real& b, real& c) {
         Swap(b, c);
     if (a > b)
         Swap(a, b);
+}
+static CUDA_HOST_DEVICE void Print(real3 v, const char* name) {
+    printf("%s\n", name);
+    printf("%f %f %f\n", v.x, v.y, v.z);
 }

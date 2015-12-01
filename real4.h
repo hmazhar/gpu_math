@@ -1,6 +1,6 @@
 #pragma once
 #include "real3.h"
-
+#include <stdio.h>
 class real4 {
   public:
     CUDA_HOST_DEVICE real4() : x(0), y(0), z(0), w(0) {}
@@ -136,6 +136,11 @@ static inline CUDA_DEVICE void AtomicMin(real4* pointer, real4 val) {
     AtomicMinf(&pointer->w, val.w);
 }
 
+static CUDA_HOST_DEVICE void Print(real4 v, const char* name) {
+    printf("%s\n", name);
+    printf("%f %f %f %f\n", v.x, v.y, v.z, v.w);
+}
+
 // Quaternion Class
 // ========================================================================================
 class quaternion {
@@ -223,3 +228,7 @@ static inline CUDA_HOST_DEVICE real3 RotateT(const real3& v, const quaternion& q
     return Rotate(v, ~q);
 }
 
+static CUDA_HOST_DEVICE void Print(quaternion v, const char* name) {
+    printf("%s\n", name);
+    printf("%f %f %f %f\n", v.w, v.x, v.y, v.z);
+}

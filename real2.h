@@ -1,6 +1,6 @@
 #pragma once
 #include "real.h"
-
+#include <stdio.h>
 class real2 {
   public:
     CUDA_HOST_DEVICE real2() : x(0.0f), y(0.0f) {}
@@ -120,4 +120,9 @@ static inline CUDA_DEVICE void AtomicMax(real2* pointer, real2 val) {
 static inline CUDA_DEVICE void AtomicMin(real2* pointer, real2 val) {
     AtomicMinf(&pointer->x, val.x);
     AtomicMinf(&pointer->y, val.y);
+}
+
+static CUDA_HOST_DEVICE void Print(real2 v, const char* name) {
+    printf("%s\n", name);
+    printf("%f %f\n", v.x, v.y);
 }

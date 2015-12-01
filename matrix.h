@@ -427,27 +427,26 @@ static inline CUDA_HOST_DEVICE SymMat22 ConjugateWithTranspose(const Mat32& A, c
     return TransposeTimesWithSymmetricResult(B * A, A);
 }
 
-
-static CUDA_HOST_DEVICE void PrintMat(Mat33 A, const char* name) {
+static CUDA_HOST_DEVICE void Print(Mat33 A, const char* name) {
     printf("%s\n", name);
     printf("%f %f %f\n", A.cols[0].x, A.cols[1].x, A.cols[2].x);
     printf("%f %f %f\n", A.cols[0].y, A.cols[1].y, A.cols[2].y);
     printf("%f %f %f\n", A.cols[0].z, A.cols[1].z, A.cols[2].z);
 }
-static CUDA_HOST_DEVICE void PrintMat(Mat32 A, const char* name) {
+static CUDA_HOST_DEVICE void Print(Mat32 A, const char* name) {
     printf("%s\n", name);
     printf("%f %f\n", A.cols[0].x, A.cols[1].x);
     printf("%f %f\n", A.cols[0].y, A.cols[1].y);
     printf("%f %f\n", A.cols[0].z, A.cols[1].z);
 }
-static CUDA_HOST_DEVICE void PrintMat(SymMat33 A, const char* name) {
+static CUDA_HOST_DEVICE void Print(SymMat33 A, const char* name) {
     printf("%s\n", name);
 
     printf("%f %f %f\n", A.x11, A.x21, A.x31);
     printf("%f %f %f\n", A.x21, A.x22, A.x32);
     printf("%f %f %f\n", A.x31, A.x32, A.x33);
 }
-static CUDA_HOST_DEVICE void PrintMat(SymMat22 A, const char* name) {
+static CUDA_HOST_DEVICE void Print(SymMat22 A, const char* name) {
     printf("%s\n", name);
 
     printf("%f %f\n", A.x11, A.x21);
